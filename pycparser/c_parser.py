@@ -1796,6 +1796,26 @@ class CParser(PLYParser):
                               c_ast.ExprList([p[3], p[5]], coord),
                               coord)
 
+    def p_primary_expression_6(self, p):
+        """ primary_expression : _GENERIC LPAREN assignment_expression COMMA generic_assoc_list RPAREN
+        """
+        p[0] = p[3]
+
+    def p_generic_assoc_list(self, p):
+        """ generic_assoc_list : generic_association
+                                 | generic_assoc_list COMMA generic_association
+        """
+        if len(p) == 2: #single entry
+            p[0] = p[1]
+        else:
+            p[0] = p[3] # TODO: handle case correctly
+
+    def p_generic_association(self, p):
+        """ generic_association : type_name COLON assignment_expression
+                                  | DEFAULT COLON assignment_expression
+        """
+        p[0] = p[3]
+
     def p_offsetof_member_designator(self, p):
         """ offsetof_member_designator : identifier
                                          | offsetof_member_designator PERIOD identifier
